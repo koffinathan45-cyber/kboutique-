@@ -1,0 +1,465 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+/* ===== STYLE GÉNÉRAL ===== */
+.shop-page {
+    --gold: #d4af37;
+    --dark: #111111;
+    --muted: #777;
+    color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    padding: 20px 14px 50px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.shop-page * {
+    box-sizing: border-box;
+}
+
+.shop-page a {
+    text-decoration: none;
+}
+
+/* ===== BANNIÈRE ===== */
+.shop-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 45px 24px;
+    margin-bottom: 30px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #080808, #292215, #111);
+    border: 1px solid rgba(212, 175, 55, .4);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, .25);
+}
+
+.shop-hero::after {
+    content: "✦";
+    position: absolute;
+    right: 25px;
+    top: 5px;
+    font-size: 120px;
+    color: rgba(212, 175, 55, .12);
+    pointer-events: none;
+}
+
+.shop-tag {
+    display: inline-block;
+    color: #111;
+    background: var(--gold);
+    padding: 7px 12px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.shop-hero h1 {
+    color: #fff;
+    font-size: clamp(28px, 6vw, 45px);
+    margin: 18px 0 12px;
+    line-height: 1.15;
+}
+
+.shop-hero h1 span {
+    color: var(--gold);
+}
+
+.shop-hero p {
+    color: #ddd;
+    max-width: 480px;
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.shop-button {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 13px 20px;
+    border-radius: 10px;
+    background: var(--gold);
+    color: #111 !important;
+    font-weight: bold;
+    transition: .25s;
+}
+
+.shop-button:hover {
+    background: #f3d675;
+    transform: translateY(-3px);
+}
+
+/* ===== BARRE DE RECHERCHE ===== */
+.shop-search {
+    margin: 25px 0;
+}
+
+.shop-search input {
+    width: 100%;
+    padding: 15px 17px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+    background: #fff;
+    color: #222;
+    transition: .2s;
+}
+
+.shop-search input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .2);
+}
+
+/* ===== TITRE DES PRODUITS ===== */
+.shop-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 30px 0 18px;
+}
+
+.shop-heading h2 {
+    font-size: 25px;
+    margin: 0;
+    color: inherit;
+}
+
+.shop-heading span {
+    color: var(--gold);
+    font-size: 13px;
+}
+
+/* ===== GRILLE DES PRODUITS ===== */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.product-card {
+    background: #fff;
+    color: #222;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, .07);
+    transition: transform .25s, box-shadow .25s;
+    animation: appear .5s ease both;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, .15);
+}
+
+.product-image {
+    position: relative;
+    height: 175px;
+    background: #f5f3ee;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 10px;
+    transition: transform .35s;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.07);
+}
+
+.product-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 6px 9px;
+    border-radius: 20px;
+    background: var(--gold);
+    color: #111;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.product-info {
+    padding: 13px;
+}
+
+.product-info h3 {
+    margin: 0 0 10px;
+    font-size: 15px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.product-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    margin-top: 12px;
+    padding: 11px 8px;
+    border-radius: 9px;
+    background: #151515;
+    color: #fff !important;
+    font-size: 13px;
+    font-weight: bold;
+    transition: .2s;
+}
+
+.product-link:hover {
+    background: var(--gold);
+    color: #111 !important;
+}
+
+/* ===== ABSENCE DE PRODUITS ===== */
+.empty-products {
+    text-align: center;
+    padding: 35px 15px;
+    background: rgba(212, 175, 55, .08);
+    border: 1px dashed var(--gold);
+    border-radius: 16px;
+    line-height: 1.7;
+}
+
+/* ===== PIED DE PAGE ===== */
+.shop-footer {
+    margin-top: 35px;
+    padding: 20px 10px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid rgba(128, 128, 128, .25);
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== GRANDS ÉCRANS ===== */
+@media (min-width: 700px) {
+    .shop-page {
+        padding: 35px 24px 60px;
+    }
+
+    .shop-hero {
+        padding: 60px 45px;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+    }
+
+    .product-image {
+        height: 230px;
+    }
+
+    .product-info {
+        padding: 18px;
+    }
+
+    .product-info h3 {
+        font-size: 17px;
+    }
+}
+
+@media (min-width: 1000px) {
+    .product-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .product-card,
+    .product-image img,
+    .shop-button {
+        animation: none;
+        transition: none;
+    }
+}
+</style>
+
+<div class="shop-page">
+
+    <!-- BANNIÈRE PRINCIPALE -->
+    <section class="shop-hero">
+        <span class="shop-tag">✨ QUALITÉ & PROPRETÉ</span>
+
+        <h1>Bienvenue chez <span>TCboutique</span></h1>
+
+        <p>
+            Découvre nos produits de nettoyage et trouve ce qu'il te faut
+            pour garder ton environnement propre et agréable.
+        </p>
+
+        {% if user.is_authenticated %}
+
+            Bienvenue! {{ user.name }}
+
+        {% else %}
+            <a class="shop-button" href="{% url 'signup' %}">
+                👤 Créer mon compte
+            </a>
+        {% endif %}
+    </section>
+
+    <!-- RECHERCHE INTERACTIVE -->
+    <div class="shop-search">
+        <input
+            type="search"
+            id="productSearch"
+            placeholder="🔎 Rechercher un produit..."
+            aria-label="Rechercher un produit"
+            autocomplete="off"
+        >
+    </div>
+
+    <!-- LISTE DES PRODUITS -->
+    <div class="shop-heading">
+        <h2>🛍️ Nos produits</h2>
+        <span id="productCount">
+            {{ products|length }} produit(s)
+        </span>
+    </div>
+
+    {% if products %}
+        <div class="product-grid" id="productGrid">
+
+            {% for product in products %}
+                <article
+                    class="product-card"
+                    data-product-name="{{ product.name|escape }}"
+                >
+                    <a
+                        href="{% url 'product' product.slug %}"
+                        aria-label="Découvrir {{ product.name }}"
+                    >
+                        <div class="product-image">
+
+                            <span class="product-badge">
+                                TCboutique
+                            </span>
+
+                            {% if product.thumbnail %}
+                                <img
+                                    src="{{ product.thumbnail.url }}"
+                                    alt="{{ product.name }}"
+                                    loading="lazy"
+                                >
+                            {% else %}
+                                <div style="
+                                    height:100%;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    flex-direction:column;
+                                    gap:8px;
+                                    color:#777;
+                                    font-size:14px;
+                                ">
+                                    <span style="font-size:35px;">🧴</span>
+                                    Image indisponible
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </a>
+
+                    <div class="product-info">
+                        <h3>{{ product.name }}</h3>
+
+                        <a
+                            class="product-link"
+                            href="{% url 'product' product.slug %}"
+                        >
+                            Voir le produit <span>→</span>
+                        </a>
+                    </div>
+                </article>
+            {% endfor %}
+
+        </div>
+
+        <div id="noSearchResults" class="empty-products" hidden>
+            <p>😕 Aucun produit ne correspond à ta recherche.</p>
+            <p>Essaie un autre nom de produit.</p>
+        </div>
+
+    {% else %}
+        <div class="empty-products">
+            <p style="font-size:35px;">🛍️</p>
+            <h3>La boutique se prépare !</h3>
+            <p>Nos produits seront bientôt disponibles.</p>
+        </div>
+    {% endif %}
+
+    <footer class="shop-footer">
+        <p>© {% now "Y" %} koffi — La propreté au quotidien ✨</p>
+    </footer>
+
+</div>
+
+<!-- JAVASCRIPT : RECHERCHE EN DIRECT -->
+<script>
+(function () {
+    const searchInput = document.getElementById("productSearch");
+    const productCards = Array.from(
+        document.querySelectorAll(".product-card")
+    );
+    const productCount = document.getElementById("productCount");
+    const noResults = document.getElementById("noSearchResults");
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener("input", function () {
+        const searchText = this.value
+            .trim()
+            .toLocaleLowerCase();
+
+        let visibleCount = 0;
+
+        productCards.forEach(function (card) {
+            const name = (
+                card.getAttribute("data-product-name") || ""
+            ).toLocaleLowerCase();
+
+            const matches = name.includes(searchText);
+
+            card.hidden = !matches;
+
+            if (matches) {
+                visibleCount++;
+            }
+        });
+
+        if (productCount) {
+            productCount.textContent =
+                visibleCount + (
+                    visibleCount > 1 ? " produits" : " produit"
+                );
+        }
+
+        if (noResults) {
+            noResults.hidden =
+                visibleCount !== 0 || searchText === "";
+        }
+    });
+})();
+</script>
+
+{% endblock %}

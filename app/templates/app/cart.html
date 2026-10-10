@@ -1,0 +1,101 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Mon panier | KBoutique{% endblock %}
+
+{% block content %}
+<style>
+.cart-page {
+    max-width: 900px;
+    margin: 25px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #222;
+}
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+.cart-item img {
+    width: 85px;
+    height: 85px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #f7f5ef;
+}
+.cart-price {
+    color: #987719;
+    font-weight: bold;
+}
+.cart-remove {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background: #ffeded;
+    color: #b42318;
+}
+.cart-button {
+    display: inline-block;
+    padding: 13px 18px;
+    margin-top: 15px;
+    background: #d4af37;
+    color: #171717;
+    text-decoration: none;
+    border-radius: 9px;
+    font-weight: bold;
+}
+</style>
+
+<div class="cart-page">
+    <h1>🛒 Mon panier</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if items %}
+        {% for item in items %}
+            <div class="cart-item">
+                {% if item.product.thumbnail %}
+                    <img src="{{ item.product.thumbnail.url }}"
+                         alt="{{ item.product.name }}">
+                {% endif %}
+
+                <div style="flex: 1;">
+                    <h3>{{ item.product.name }}</h3>
+                    <p>Quantité : {{ item.quantity }}</p>
+                    <p class="cart-price">
+                        {{ item.subtotal|floatformat:0 }} FCFA
+                    </p>
+                </div>
+
+                <form method="post"
+                      action="{% url 'remove_from_cart' item.product.id %}">
+                    {% csrf_token %}
+                    <button class="cart-remove" type="submit">
+                        Retirer
+                    </button>
+                </form>
+            </div>
+        {% endfor %}
+
+        <h2>
+            Total : {{ total|floatformat:0 }} FCFA
+        </h2>
+
+        <a class="cart-button" href="{% url 'index' %}">
+            Continuer mes achats
+        </a>
+    {% else %}
+        <p>Ton panier est vide pour le moment.</p>
+        <a class="cart-button" href="{% url 'index' %}">
+            Découvrir les produits
+        </a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+
+{% block title %}Connexion | KBoutique{% endblock %}
+
+{% block content %}
+
+<style>
+.login-page {
+    min-height: 75vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px 15px;
+    background: linear-gradient(135deg, #111, #292929, #171717);
+    border-radius: 18px;
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 35px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,.4);
+    animation: apparition .6s ease;
+}
+
+@keyframes apparition {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-logo {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d4af37, #f5d76e);
+    color: #111;
+    font-size: 27px;
+    font-weight: 900;
+    box-shadow: 0 5px 18px rgba(212,175,55,.35);
+}
+
+.login-container h1 {
+    text-align: center;
+    color: #171717;
+    font-size: 27px;
+    margin-bottom: 10px;
+}
+
+.login-subtitle {
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 27px;
+}
+
+.login-group {
+    margin-bottom: 20px;
+}
+
+.login-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.login-input-wrap {
+    position: relative;
+}
+
+.login-input-wrap input {
+    width: 100%;
+    padding: 14px 44px 14px 14px;
+    border: 2px solid #e2e2e2;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.login-input-wrap input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212,175,55,.15);
+}
+
+.login-icon {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    font-size: 17px;
+}
+
+.login-eye {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    padding: 5px;
+}
+
+.login-error {
+    margin-bottom: 18px;
+    padding: 12px;
+    background: #fff0f0;
+    color: #b42318;
+    border-left: 4px solid #d92d20;
+    border-radius: 7px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.login-submit {
+    width: 100%;
+    margin-top: 5px;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #d4af37, #b8860b);
+    color: #111;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.login-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(184,134,11,.3);
+}
+
+.login-submit:active {
+    transform: scale(.98);
+}
+
+.login-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0;
+    color: #aaa;
+    font-size: 12px;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.login-register {
+    text-align: center;
+    font-size: 14px;
+    color: #777;
+    line-height: 1.8;
+}
+
+.login-register a {
+    color: #98720b;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.login-register a:hover {
+    text-decoration: underline;
+}
+
+.login-home {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #777;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.login-home:hover {
+    color: #98720b;
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 27px 21px;
+    }
+
+    .login-container h1 {
+        font-size: 24px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .login-container,
+    .login-submit {
+        animation: none;
+        transition: none;
+    }
+}
+</style>
+
+<div class="login-page">
+    <div class="login-container">
+
+        <div class="login-logo">KB</div>
+
+        <h1>Bon retour !</h1>
+
+        <p class="login-subtitle">
+            Connecte-toi à ton compte KBoutique
+            pour retrouver ton espace.
+        </p>
+
+        {% if form.errors or messages %}
+            {% if form.errors %}
+                <div class="login-error" role="alert">
+                    Nom d'utilisateur ou mot de passe incorrect.
+                    Vérifie tes informations et réessaie.
+                </div>
+            {% endif %}
+
+            {% for message in messages %}
+                <div class="login-error" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="login-group">
+                <label for="username">Nom d'utilisateur</label>
+
+                <div class="login-input-wrap">
+                    <input
+                        id="username"
+                        type="text"
+                        name="username"
+                        placeholder="Entre ton nom d'utilisateur"
+                        autocomplete="username"
+                        maxlength="150"
+                        required
+                        autofocus
+                    >
+                    <span class="login-icon">👤</span>
+                </div>
+            </div>
+
+            <div class="login-group">
+                <label for="password">Mot de passe</label>
+
+                <div class="login-input-wrap">
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        placeholder="Entre ton mot de passe"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="login-icon login-eye"
+                        id="togglePassword"
+                        aria-label="Afficher le mot de passe"
+                        aria-pressed="false"
+                    >👁️</button>
+                </div>
+            </div>
+
+            <button type="submit" class="login-submit">
+                Se connecter →
+            </button>
+        </form>
+
+        <div class="login-divider">NOUVEAU CHEZ KBOUTIQUE ?</div>
+
+        <div class="login-register">
+            Tu n'as pas encore de compte ?
+            <a href="{% url 'signup' %}">Créer un compte</a>
+        </div>
+
+        <a href="{% url 'index' %}" class="login-home">
+            ← Retour à la boutique
+        </a>
+
+    </div>
+</div>
+
+<script>
+(function () {
+    const button = document.getElementById("togglePassword");
+    const password = document.getElementById("password");
+
+    if (!button || !password) return;
+
+    button.addEventListener("click", function () {
+        const visible = password.type === "password";
+
+        password.type = visible ? "text" : "password";
+        button.textContent = visible ? "🙈" : "👁️";
+        button.setAttribute("aria-pressed", String(visible));
+        button.setAttribute(
+            "aria-label",
+            visible ? "Masquer le mot de passe" : "Afficher le mot de passe"
+        );
+    });
+})();
+</script>
+
+{% endblock %}

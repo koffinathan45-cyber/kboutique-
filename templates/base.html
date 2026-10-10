@@ -1,0 +1,345 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111111">
+    
+
+    <title>{% block title %}TCoutique | Produits de nettoyage{% endblock %}</title>
+
+    <style>
+      
+.nav-cart {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    background: #d4af37;
+    color: #171717;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+
+.nav-cart:hover {
+    background: #f1d36e;
+}
+
+.cart-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 23px;
+    height: 23px;
+    padding: 0 5px;
+    border-radius: 50%;
+    background: #171717;
+    color: white;
+    font-size: 12px;
+}
+
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f5d978;
+            --dark: #111111;
+            --dark-soft: #1c1c1c;
+            --white: #ffffff;
+            --gray: #f5f5f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--gray);
+            color: #222;
+        }
+
+        /* ===== EN-TÊTE ===== */
+        .site-header {
+            background: linear-gradient(135deg, #090909, #222);
+            color: var(--white);
+            border-bottom: 3px solid var(--gold);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, .15);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            min-height: 82px;
+            margin: auto;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== LOGO ===== */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            background: linear-gradient(135deg, #292315, #080808);
+            color: var(--gold);
+            font-size: 21px;
+            font-weight: 900;
+            box-shadow: 0 0 15px rgba(212, 175, 55, .15);
+        }
+
+        .brand-text h1 {
+            font-size: clamp(19px, 4vw, 25px);
+            letter-spacing: .5px;
+            line-height: 1.2;
+        }
+
+        .brand-text h1 span {
+            color: var(--gold);
+        }
+
+        .brand-text p {
+            color: #c7c7c7;
+            font-size: 11px;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: #eee;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 12px;
+            border-radius: 8px;
+            transition: .2s;
+        }
+
+        .nav-link:hover {
+            color: var(--gold);
+            background: rgba(255, 255, 255, .06);
+        }
+
+        .signup-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            background: var(--gold);
+            color: #111;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: bold;
+            transition: .25s;
+            border: 1px solid var(--gold);
+        }
+
+        .signup-button:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, .2);
+        }
+
+        /* ===== CONTENU PRINCIPAL ===== */
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 25px 18px 45px;
+        }
+
+        /* ===== MESSAGES DJANGO ===== */
+        .messages {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .messages li {
+            background: #fff8df;
+            color: #5d4810;
+            border-left: 4px solid var(--gold);
+            border-radius: 8px;
+            padding: 13px 15px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        /* ===== PIED DE PAGE ===== */
+        .site-footer {
+            margin-top: auto;
+            padding: 24px 15px;
+            background: #111;
+            border-top: 2px solid var(--gold);
+            color: #bbb;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .site-footer strong {
+            color: var(--gold);
+        }
+
+        /* ===== PETITS ÉCRANS ===== */
+        @media (max-width: 520px) {
+            .header-inner {
+                padding: 14px;
+                gap: 14px;
+            }
+
+            .brand-logo {
+                width: 42px;
+                height: 42px;
+                font-size: 18px;
+            }
+
+            .brand-text p {
+                font-size: 9px;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .header-actions .nav-link,
+            .header-actions .signup-button {
+                flex: 1;
+                text-align: center;
+            }
+
+            main {
+                padding: 20px 12px 35px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *, *::before, *::after {
+                transition: none !important;
+            }
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- EN-TÊTE -->
+    <header class="site-header">
+        <div class="header-inner">
+
+            <a href="{% url 'index' %}" class="brand">
+                <div class="brand-logo">TC</div>
+
+                <div class="brand-text">
+                    <h1>TC<span>Boutique</span></h1>
+                    <p>PROPRETÉ • QUALITÉ • CONFIANCE</p>
+                </div>
+            </a>
+
+            <nav class="header-actions" aria-label="Navigation principale">
+
+                <a href="{% url 'index' %}" class="nav-link">
+                    🏠 Accueil
+                </a> 
+              
+<a href="{% url 'cart' %}" class="nav-cart">
+    🛒 Panier
+    {% if cart_count %}
+        <span class="cart-count">{{ cart_count }}</span>
+    {% endif %}
+</a>
+
+
+                {% if user.is_authenticated %}
+
+              <span class="nav-link">
+                        👋 bienvenue! {{ user.username }}
+                        <a href="{% url 'logout' %}">Déconexion</a>
+              </span>
+              {% else %}
+                    <a href="{% url 'login' %}" class="signup-button">
+                        👤 connexion
+                    </a>
+                    <a href="{% url 'signup' %}" class="signup-button">
+                        👤 Créer un compte
+                    </a>
+                
+                    
+                {% endif %}
+
+            </nav>
+        </div>
+    </header>
+
+    <!-- CONTENU DES AUTRES PAGES -->
+    <main>
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+    <!-- PIED DE PAGE -->
+    <footer class="site-footer">
+        <p>© {% now "Y" %} <strong>Koffi</strong></p>
+        <p>Vos produits de nettoyage, simplement et avec confiance.</p>
+        <p>Une boutique pensée pour vous en Côte d'Ivoire 🇨🇮</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

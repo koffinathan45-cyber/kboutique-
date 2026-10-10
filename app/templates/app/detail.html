@@ -1,0 +1,407 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} | TCBOUTIQUE{% endblock %}
+
+{% block content %}
+
+<style>
+  .product-actions form {
+    width: 100%;
+}
+
+.product-actions form label {
+    display: block;
+    font-weight: bold;
+}
+
+.product-actions form .product-buy-button {
+    width: 100%;
+}
+.product-page {
+    --gold: #d4af37;
+    --dark: #151515;
+    max-width: 1050px;
+    margin: 10px auto;
+    color: #222;
+    font-family: Arial, sans-serif;
+}
+
+.product-breadcrumb {
+    margin-bottom: 22px;
+    font-size: 14px;
+    color: #777;
+}
+
+.product-breadcrumb a {
+    color: #987719;
+    text-decoration: none;
+}
+
+.product-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    border: 1px solid #eee;
+}
+
+.product-visual {
+    position: relative;
+    min-width: 0;
+}
+
+.product-image-box {
+    min-height: 300px;
+    height: 100%;
+    max-height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 15px;
+    background: linear-gradient(145deg, #f7f5ef, #fff);
+}
+
+.product-image-box img {
+    width: 100%;
+    height: 100%;
+    max-height: 430px;
+    object-fit: contain;
+    padding: 15px;
+    transition: transform .35s;
+}
+
+.product-image-box img:hover {
+    transform: scale(1.06);
+}
+
+.product-no-image {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+.product-no-image span {
+    display: block;
+    font-size: 65px;
+    margin-bottom: 12px;
+}
+
+.product-label {
+    display: inline-block;
+    padding: 8px 12px;
+    background: #fff0bd;
+    color: #6d5100;
+    border-radius: 30px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5px 0;
+}
+
+.product-details h1 {
+    margin: 17px 0 12px;
+    font-size: clamp(25px, 4vw, 35px);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+    color: #171717;
+}
+
+.product-price {
+    font-size: 29px;
+    font-weight: 800;
+    color: #9a7410;
+    margin: 5px 0 17px;
+}
+
+.product-price small {
+    font-size: 14px;
+    color: #777;
+    font-weight: normal;
+}
+
+.product-stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    background: #eaf8ed;
+    color: #21713a;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 22px;
+}
+
+.product-stock.out-of-stock {
+    background: #ffeded;
+    color: #b42318;
+}
+
+.product-description-title {
+    font-size: 17px;
+    margin-bottom: 9px;
+    color: #222;
+}
+
+.product-description {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+    margin-bottom: 24px;
+    white-space: pre-line;
+}
+
+.product-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    margin-top: auto;
+}
+
+.product-buy-button,
+.product-back-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.product-buy-button {
+    background: var(--gold);
+    color: #171717;
+}
+
+.product-buy-button:hover {
+    background: #f1d36e;
+    transform: translateY(-2px);
+}
+
+.product-buy-button:disabled {
+    background: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.product-back-button {
+    background: #171717;
+    color: white;
+}
+
+.product-back-button:hover {
+    background: #333;
+}
+
+.product-benefits {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.benefit {
+    padding: 17px 8px;
+    text-align: center;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: white;
+    font-size: 12px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.benefit span {
+    display: block;
+    font-size: 23px;
+    margin-bottom: 5px;
+}
+
+@media (max-width: 700px) {
+    .product-layout {
+        grid-template-columns: 1fr;
+        padding: 15px;
+        gap: 22px;
+    }
+
+    .product-image-box {
+        min-height: 260px;
+        height: 300px;
+    }
+
+    .product-details {
+        padding: 0 3px 5px;
+    }
+
+    .product-benefits {
+        gap: 7px;
+    }
+
+    .benefit {
+        font-size: 10px;
+        padding: 13px 4px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .product-image-box img,
+    .product-buy-button {
+        transition: none;
+    }
+}
+</style>
+
+<div class="product-page">
+
+    <div class="product-breadcrumb">
+        <a href="{% url 'index' %}">Accueil</a>
+        <span> / </span>
+        <span>{{ product.name }}</span>
+    </div>
+
+    <section class="product-layout">
+
+        <!-- IMAGE DU PRODUIT -->
+        <div class="product-visual">
+            <div class="product-image-box">
+
+                {% if product.thumbnail %}
+                    <img
+                        src="{{ product.thumbnail.url }}"
+                        alt="{{ product.name }}"
+                    >
+                {% else %}
+                    <div class="product-no-image">
+                        <span>🧴</span>
+                        <p>Image non disponible</p>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <!-- INFORMATIONS DU PRODUIT -->
+        <div class="product-details">
+
+            <span class="product-label">
+                ✨ TCBOUTIQUE
+            </span>
+
+            <h1>{{ product.name }}</h1>
+
+            <div class="product-price">
+                {{ product.price }} <small>FCFA</small>
+            </div>
+
+            {% if product.stock > 0 %}
+                <div class="product-stock">
+                    <span>●</span>
+                    {{ product.stock }} disponible(s)
+                </div>
+            {% else %}
+                <div class="product-stock out-of-stock">
+                    Produit actuellement indisponible
+                </div>
+            {% endif %}
+
+            <h2 class="product-description-title">
+                À propos de ce produit
+            </h2>
+
+            <p class="product-description">{% if product.description %}{{ product.description }}{% else %}Aucune description disponible pour le moment.{% endif %}</p>
+
+<div class="product-actions">
+
+    {% if product.stock > 0 %}
+        <form method="post"
+              action="{% url 'add_to_cart' product.slug %}">
+            {% csrf_token %}
+
+            <label for="quantity">Quantité :</label>
+
+            <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                value="1"
+                min="1"
+                max="{{ product.stock }}"
+                required
+                style="width: 90px; padding: 10px;
+                       margin: 10px 0; border-radius: 8px;
+                       border: 1px solid #d4af37;"
+            >
+
+            <button type="submit" class="product-buy-button">
+                🛒 Ajouter au panier
+            </button>
+        </form>
+    {% else %}
+        <button class="product-buy-button" disabled>
+            Produit indisponible
+        </button>
+    {% endif %}
+
+    <a href="{% url 'cart' %}"
+       class="product-back-button">
+        🛍️ Voir mon panier
+    </a>
+
+    <a href="{% url 'index' %}"
+       class="product-back-button">
+        ← Continuer mes achats
+    </a>
+   
+</div>
+      
+
+    </section>
+
+    <section class="product-benefits">
+        <div class="benefit">
+            <span>🇨🇮</span>
+            Boutique ivoirienne
+        </div>
+
+        <div class="benefit">
+            <span>✨</span>
+            Qualité & confiance
+        </div>
+
+        <div class="benefit">
+            <span>🛍️</span>
+            Achat simple
+        </div>
+    </section>
+
+</div>
+
+<!-- INTERACTION DU BOUTON -->
+<script>
+function showPurchaseMessage() {
+    alert(
+        "Merci pour ton intérêt pour {{ product.name|escapejs }} ! " +
+        "La commande en ligne sera disponible dès que le système d'achat sera configuré."
+    );
+}
+</script>
+
+{% endblock %}
